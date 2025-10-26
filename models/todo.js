@@ -4,19 +4,25 @@ export default (sequelize) => {
   class Todo extends Model {
     static associate(models) {
       Todo.belongsTo(models.Category, {
-        foreignKey: "category_id", // The column in the Todo table that links to Category
+        foreignKey: "category_id",
         as: 'category'
       })
     }
   }
   Todo.init({
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      allowNull: false,
+      primaryKey: true
+    },
     title: {
       type: DataTypes.TEXT,
       allowNull: false
     },
     completed: {
       type: DataTypes.BOOLEAN,
-      defaultValue: false
+      defaultValue: false,
     },
     category_id: {
       type: DataTypes.INTEGER,

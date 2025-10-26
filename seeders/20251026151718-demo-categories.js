@@ -2,9 +2,9 @@
 
 export async function up(queryInterface, Sequelize) {
   await queryInterface.bulkInsert('Categories', [
-    { name: 'Work', createdAt: new Date(), updatedAt: new Date() },
-    { name: 'Personal', createdAt: new Date(), updatedAt: new Date() },
-    { name: 'Shopping', createdAt: new Date(), updatedAt: new Date() },
+    { name: 'Work', created_at: new Date(), updated_at: new Date() },
+    { name: 'Personal', created_at: new Date(), updated_at: new Date() },
+    { name: 'Shopping', created_at: new Date(), updated_at: new Date() },
   ], {});
 }
 export async function down(queryInterface, Sequelize) {
