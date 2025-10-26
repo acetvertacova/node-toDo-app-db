@@ -1,0 +1,43 @@
+'use strict';
+
+export async function up(queryInterface, Sequelize) {
+  await queryInterface.createTable('Todos', {
+    id: {
+      allowNull: false,
+      primaryKey: true,
+      type: Sequelize.UUID,
+      defaultValue: Sequelize.literal('gen_random_uuid()')
+    },
+    title: {
+      type: Sequelize.TEXT,
+      allowNull: false
+    },
+    completed: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false
+    },
+    category_id: {
+      type: Sequelize.INTEGER,
+      references: {
+        model: 'Categories',
+        key: 'id'
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE'
+    },
+    due_date: {
+      type: Sequelize.DATE
+    },
+    createdAt: {
+      allowNull: false,
+      type: Sequelize.DATE
+    },
+    updatedAt: {
+      allowNull: false,
+      type: Sequelize.DATE
+    }
+  });
+}
+export async function down(queryInterface, Sequelize) {
+  await queryInterface.dropTable('Todos');
+}
