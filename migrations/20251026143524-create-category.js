@@ -12,11 +12,11 @@ export async function up(queryInterface, Sequelize) {
       type: Sequelize.STRING(100),
       allowNull: false
     },
-    createdAt: {
+    created_at: {
       allowNull: false,
       type: Sequelize.DATE
     },
-    updatedAt: {
+    updated_at: {
       allowNull: false,
       type: Sequelize.DATE
     }

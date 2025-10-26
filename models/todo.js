@@ -29,6 +29,7 @@ export default (sequelize) => {
   }, {
     sequelize,
     modelName: 'Todo',
+    tableName: 'Todos',
     underscored: true,
   });
   return Todo;

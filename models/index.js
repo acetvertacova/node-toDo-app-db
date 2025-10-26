@@ -1,36 +1,47 @@
-'use strict';
+// models/index.js (ESM)
 
-const fs = require('fs');
-const path = require('path');
-const Sequelize = require('sequelize');
-const process = require('process');
-const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.json')[env];
+import { readdirSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, basename as _basename, join } from 'path';
+import Sequelize, { DataTypes } from 'sequelize';
+import { env as _env } from 'process';
+
+// === Замена __dirname для ESM ===
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const basename = _basename(__filename);
+// ===============================
+
+const env = _env.NODE_ENV || 'development';
+// Примечание: Для загрузки конфига в ESM часто требуется перенести его в CJS (как config.cjs)
+// или использовать динамический import()
+import configLoader from '../config/config.js';
+const config = configLoader[env];
+
 const db = {};
 
 let sequelize;
 if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
+  sequelize = new Sequelize(_env[config.use_env_variable], config);
 } else {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
-fs
-  .readdirSync(__dirname)
-  .filter(file => {
-    return (
-      file.indexOf('.') !== 0 &&
-      file !== basename &&
-      file.slice(-3) === '.js' &&
-      file.indexOf('.test.js') === -1
-    );
-  })
-  .forEach(file => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
+// Загрузка моделей
+for (const file of readdirSync(__dirname)) {
+  if (
+    file.indexOf('.') !== 0 &&
+    file !== basename &&
+    file.slice(-3) === '.js' &&
+    file.indexOf('.test.js') === -1
+  ) {
+    // Используем динамический import() для загрузки моделей в ESM
+    const model = (await import(join(__dirname, file))).default(sequelize, DataTypes);
     db[model.name] = model;
-  });
+  }
+}
 
+// Установка ассоциаций
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
@@ -40,4 +51,4 @@ Object.keys(db).forEach(modelName => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-module.exports = db;
+export default db;
