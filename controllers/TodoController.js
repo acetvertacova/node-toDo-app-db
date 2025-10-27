@@ -106,7 +106,7 @@ export async function remove(req, res) {
         }
 
         await todo.destroy();
-        res.status(204);
+        res.status(204).send();;
     } catch (error) {
         res.status(500).json({ error: 'Server Error' });
     }
